@@ -1,0 +1,101 @@
+#!/bin/sh
+#
+# Startup script for drelephant
+#
+### BEGIN INIT INFO
+# Provides:                     drelephant*
+# Required-Start:                 
+# Should-Start:                 
+# Required-Stop:                  
+# Default-Start:                2 3 4 5
+# Default-Stop:                 0 1 6
+# Short-Description:            start and stop drelephant-*
+# Description:                  Start/Stop/Restart drelephant
+### END INIT INFO
+
+# Variables
+
+START_PROG="cd  <%= node['drelephant']['base_dir'] %>; export RUNNING_PID=/tmp/dr-elephant.pid; export HADOOP_HOME=<%= node['hops']['base_dir'] %>; export PATH=<%= node['hops']['base_dir'] %>/bin:$PATH; <%= node['drelephant']['base_dir'] %>/bin/start.sh <%= node['drelephant']['base_dir'] %>/conf"  
+STOP_PROG="export RUNNING_PID=/tmp/dr-elephant.pid; <%= node['drelephant']['base_dir'] %>/bin/stop.sh"  
+PID_FILE=<%= node['drelephant']['base_dir'] %>/RUNNING_PID
+EXEC_WITH_USER="su <%= node['drelephant']['user'] %> -c"
+
+start() {
+  ulimit -n 65000 2>&1 > /dev/null
+  $EXEC_WITH_USER "$START_PROG"
+  return $?
+}
+
+stop() {
+  $EXEC_WITH_USER "$STOP_PROG"
+  return $?
+}
+
+status() {
+  res=1
+  if [ -f $PID_FILE ] ; then
+     PID=`cat $PID_FILE`
+     kill -0 $PID
+     res=$?
+  fi
+  if [ $res -eq 0 ] ; then
+   echo "drelephant($PID) is running"
+  else
+   echo "drelephant is not running"
+  fi
+  return $res
+}
+
+
+restart() {
+  status
+  if [ $? -eq 0 ] ; then
+    stop
+    sleep 5
+  fi
+  start
+# Sometimes need to restart dr-elepehant
+  if [ $? -ne 0 ] ; then
+    sleep 3
+    status
+    if [ $? -ne 0 ] ; then
+      stop
+      sleep 5
+      start
+    fi
+  fi
+
+  return $?
+}
+
+
+# user-supplied parameter to stop/start/restart process.
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    restart
+    ;;
+  reload)
+    restart
+    ;;
+  status)
+    status
+    ;;
+  -h|--help)
+    echo ""
+    echo "usage: <prog> start|stop|restart|status"
+    echo ""
+    exit 0
+    ;;
+  *)
+    echo $"Usage: <prog> {start|stop|restart|status}"
+    exit 1
+  esac
+
+
+exit $?
