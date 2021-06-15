@@ -6,17 +6,10 @@ metadata
 cookbook 'java'
 
 
-<<<<<<< HEAD
-cookbook 'kagent', github: "giabbo79/kagent-chef", branch: "master"
-cookbook 'ndb', github: "giabbo79/ndb-chef", branch: "master"
-cookbook 'hops', github: "giabbo79/hops-hadoop-chef", branch: "master"
-cookbook 'hadoop_spark', github: "giabbo79/spark-chef", branch: "master"
-=======
-cookbook 'kagent', github: "giabbo79/kagent-chef", branch: "master"
-cookbook 'ndb', github: "giabbo79/ndb-chef", branch: "master"
-cookbook 'hops', github: "giabbo79/hops-hadoop-chef", branch: "master"
-cookbook 'hadoop_spark', github: "giabbo79/spark-chef", branch: "master"
->>>>>>> origin/master
+cookbook 'kagent', github: "giabbo79/kagent-chef", branch: "2.2"
+cookbook 'ndb', github: "giabbo79/ndb-chef", branch: "2.2"
+cookbook 'hops', github: "giabbo79/hops-hadoop-chef", branch: "2.2"
+cookbook 'hadoop_spark', github: "giabbo79/spark-chef", branch: "2.2"
 
 
 
